@@ -1,0 +1,33 @@
+<?php
+/*
+Plugin name: PekorKort-wp
+Plugin URI: http://localhost
+Description: you can access to Quran anywhere
+Version: V0.1.0
+Author: RavandSoft
+Author URI: http://localhost
+Text Domain: -e('PekorKort-wp','PEkorKort-wp')
+ */
+defined('ABSPATH') || exit('No Direct Access.');
+define('PEKORKORT_DIR', plugin_dir_path(__FILE__));
+define('PEKORKORT_URL', plugin_dir_url(__FILE__));
+define('PEKORKORT_CSS_URL', trailingslashit(PEKORKORT_URL.'assets/css'));
+define('PEKORKORT_JS_URL', trailingslashit(PEKORKORT_URL.'assets/js'));
+define('PEKORKORT_IMG_URL', trailingslashit(PEKORKORT_URL.'assets/img'));
+define('PEKORKORT_INC_DIR', trailingslashit(PEKORKORT_DIR.'include'));
+define('PEKORKORT_ADMIN_DIR', trailingslashit(PEKORKORT_DIR.'admin'));
+define('PEKORKORT_TPL_DIR', trailingslashit(PEKORKORT_DIR.'template'));
+define('PEKORKORT_VERSION', "0.1.0");
+
+
+require PEKORKORT_INC_DIR.'assets.php';
+require PEKORKORT_INC_DIR.'shortcodes.php';
+add_action('plugins_loaded', 'PEKORKORT_textdomain');
+function PEKORKORT_textdomain() {
+	load_plugin_textdomain( 'SalamQuran-wp', false, dirname( plugin_basename(__FILE__) ) . '/languages/' );
+}
+if(is_admin())
+{
+	require_once PEKORKORT_ADMIN_DIR.'admin.php';
+}
+// require PEKORKORT_INC_DIR."class/Bitcoin.php";
