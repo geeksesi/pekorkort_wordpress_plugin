@@ -22,7 +22,7 @@ class Categories
         $table_name = $_prefix . "pekorkort_categories";
         $sql = "CREATE TABLE $table_name (
             id       int(9)         NOT NULL AUTO_INCREMENT,
-            name     int(9)         NOT NULL,            
+            name     varchar(30     NOT NULL,            
             PRIMARY KEY  (id)
           ) $_charset;";
 
