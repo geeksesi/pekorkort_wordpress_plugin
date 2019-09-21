@@ -2,11 +2,11 @@
 /*
 Plugin name: PekorKort-wp
 Plugin URI: http://localhost
-Description: you can access to Quran anywhere
+Description: Pekokort Drive Test plugin
 Version: V0.1.0
 Author: RavandSoft
 Author URI: http://localhost
-Text Domain: -e('PekorKort-wp','PEkorKort-wp')
+Text Domain: -e('PekorKort-wp','PekorKort-wp')
  */
 defined('ABSPATH') || exit('No Direct Access.');
 define('PEKORKORT_DIR', plugin_dir_path(__FILE__));
@@ -19,12 +19,13 @@ define('PEKORKORT_ADMIN_DIR', trailingslashit(PEKORKORT_DIR.'admin'));
 define('PEKORKORT_TPL_DIR', trailingslashit(PEKORKORT_DIR.'template'));
 define('PEKORKORT_VERSION', "0.1.0");
 
-
 require PEKORKORT_INC_DIR.'assets.php';
 require PEKORKORT_INC_DIR.'shortcodes.php';
+require PEKORKORT_INC_DIR.'class/db/db.php';
+
 add_action('plugins_loaded', 'PEKORKORT_textdomain');
 function PEKORKORT_textdomain() {
-	load_plugin_textdomain( 'SalamQuran-wp', false, dirname( plugin_basename(__FILE__) ) . '/languages/' );
+	load_plugin_textdomain( 'PekorKort-wp', false, dirname( plugin_basename(__FILE__) ) . '/languages/' );
 }
 if(is_admin())
 {
