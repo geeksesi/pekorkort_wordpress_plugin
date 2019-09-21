@@ -17,9 +17,9 @@ function jal_install()
    error_log("im here");
    global $wpdb;
 
-   $quest         = new Quest();
-   $exam          = new Exam();
-   $categories    = new Categories();
+   $quest         = new Quest($wpdb);
+   $exam          = new Exam($wpdb);
+   $categories    = new Categories($wpdb);
 
    $table_prefix     = $wpdb->prefix;
    $charset_collate  = $wpdb->get_charset_collate();

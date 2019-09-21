@@ -6,8 +6,11 @@ defined('ABSPATH') || exit;
  */
 class Exam
 {
-    function __construct()
-    { }
+    private $wpdb;
+    function __construct($_wpdb)
+    {
+        $this->wpdb = $_wpdb;
+    }
 
 
     /**

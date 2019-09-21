@@ -4,8 +4,11 @@ defined('ABSPATH') || exit;
 
 class Quest
 {
-    function __construct()
-    { }
+    private $wpdb;
+    function __construct($_wpdb)
+    {
+        $this->wpdb = $_wpdb;
+    }
 
     /**
      * retun sql query for migration
