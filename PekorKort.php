@@ -19,9 +19,9 @@ define('PEKORKORT_ADMIN_DIR', trailingslashit(PEKORKORT_DIR.'admin'));
 define('PEKORKORT_TPL_DIR', trailingslashit(PEKORKORT_DIR.'template'));
 define('PEKORKORT_VERSION', "0.1.0");
 
+require PEKORKORT_INC_DIR.'class/db/db.php';
 require PEKORKORT_INC_DIR.'assets.php';
 require PEKORKORT_INC_DIR.'shortcodes.php';
-require PEKORKORT_INC_DIR.'class/db/db.php';
 
 
 register_activation_hook(__FILE__, 'jal_install');
