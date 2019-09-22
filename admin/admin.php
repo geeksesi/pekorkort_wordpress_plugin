@@ -11,6 +11,6 @@ function PekorKort_admin_menu(){
 
 function PekorKort_dashboard_page ()
 {
-    // global $BTC;
+    global $exam_generator;
     require PEKORKORT_TPL_DIR.'html-admin-main.php';
 }
