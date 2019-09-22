@@ -84,7 +84,7 @@ class Quest
     }
 
     /**
-     * get data by category id
+     * get quests id by category id
      *
      * @param integer $_category_id
      * @return boolean|array
@@ -94,15 +94,15 @@ class Quest
         if (!is_numeric($_category_id))
             return false;
 
-        $query_string = "SELECT * FROM " . $this->table_name . "WHERE  category_id=" . $_category_id;
-        $query_result = $this->wpdb->get_result($query_string);
+        $query_string = "SELECT id FROM " . $this->table_name . " WHERE  category_id=" . $_category_id;
+        $query_result = $this->wpdb->get_results($query_string);
 
         return $query_result;
     }
 
 
     /**
-     * get data by deficulty level
+     * get quests id by deficulty level
      *
      * @param integer $_level
      * @return boolean|array
@@ -112,8 +112,8 @@ class Quest
         if (!is_numeric($_level))
             return false;
 
-        $query_string = "SELECT * FROM " . $this->table_name . "WHERE  level=" . $_level;
-        $query_result = $this->wpdb->get_result($query_string);
+        $query_string = "SELECT id FROM " . $this->table_name . " WHERE  level=" . $_level;
+        $query_result = $this->wpdb->get_results($query_string);
 
         return $query_result;
     }
@@ -129,7 +129,7 @@ class Quest
         if (!is_numeric($_id))
             return false;
 
-        $query_string = "SEECT * FROM " . $this->table_name . "WHERE  id=" . $_id;
+        $query_string = "SEECT * FROM " . $this->table_name . " WHERE  id=" . $_id;
         $query_result = $this->wpdb->get_row($query_string, ARRAY_A);
 
         return $query_result;
@@ -143,7 +143,20 @@ class Quest
     public function get_all()
     {
         $query_string = "SELECT * FROM " . $this->table_name;
-        $query_result = $this->wpdb->get_result($query_string);
+        $query_result = $this->wpdb->get_results($query_string);
+
+        return $query_result;
+    }
+
+    /**
+     * get all of quests id
+     *
+     * @return array
+     */
+    public function get_just_ids()
+    {
+        $query_string = "SELECT id FROM " . $this->table_name;
+        $query_result = $this->wpdb->get_results($query_string);
 
         return $query_result;
     }

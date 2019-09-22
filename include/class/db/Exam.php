@@ -115,7 +115,7 @@ class Exam
             return false;
 
         $query_string = "SELECT * FROM " . $this->table_name . "where user_id=" . $_user_id;
-        $query_result = $this->wpdb->get_result($query_string);
+        $query_result = $this->wpdb->get_results($query_string);
 
         return $query_result;
     }
