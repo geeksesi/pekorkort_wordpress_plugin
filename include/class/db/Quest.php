@@ -19,19 +19,20 @@ class Quest
      * @param   String  $_charset
      * @return  String  $sql
      */
-    public function migration($_charset)
+    public static function migration($_charset, $_prefix)
     {
-        $sql = "CREATE TABLE $this->table_name (
-            id              int(9)          NOT NULL AUTO_INCREMENT,
-            quest           text            NOT NULL,
-            answers         text            NOT NULL,
-            quest_type      varchar(20)     NOT NULL,
-            answer_types    varchar(100)    NOT NULL,
-            season_id       int(10)         NOT NULL,
-            level           int(2)          NOT NULL,
-            wrong_refer     varchar(55)     NOT NULL,
-            correct_refer   varchar(55)     NOT NULL,
-            timestamp       bigint(12)      NOT NULL,
+        $table_name = $_prefix . "pekorkort_quest";
+        $sql = "CREATE TABLE $table_name (
+            id                int(9)          NOT NULL AUTO_INCREMENT,
+            quest             text            NOT NULL,
+            answers           text            NOT NULL,
+            quest_type        varchar(20)     NOT NULL,
+            answers_type      varchar(100)    NOT NULL,
+            category_id       int(10)         NOT NULL,
+            level             int(2)          NOT NULL,
+            wrong_refer       varchar(55)     NOT NULL,
+            correct_refer     varchar(55)     NOT NULL,
+            timestamp         bigint(12)      NOT NULL,
             
             PRIMARY KEY  (id)
           ) $_charset;";
@@ -54,11 +55,12 @@ class Quest
      */
     public function set_data(string $_question, string $_answers, string $_quest_type, string $_answers_type, string $_wrong_refer, string $_correct_refer, int $_category_id, int $_level)
     {
+        error_log("hey");
         if (empty($_question) || empty($_answers) || empty($_quest_type) || empty($_answers_type) || empty($_wrong_refer) || empty($_correct_refer) || empty($_category_id) || empty($_level))
             return false;
 
         $query_result = $this->wpdb->insert($this->table_name, [
-            "question" => $_question,
+            "quest" => $_question,
             "answers" => $_answers,
             "quest_type" => $_quest_type,
             "answers_type" => $_answers_type,

@@ -22,9 +22,10 @@ class Exam
      * @param   String  $_charset
      * @return  String  $sql
      */
-    public function migration($_charset)
+    public static function migration($_charset, $_prefix)
     {
-        $sql = "CREATE TABLE $this->table_name (
+        $table_name = $_prefix . "pekorkort_exam";
+        $sql = "CREATE TABLE $table_name (
             id               int(9)         NOT NULL AUTO_INCREMENT,
             user_id          int(9)         NOT NULL,
             questions_id     varchar(100)   NOT NULL,

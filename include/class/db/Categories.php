@@ -20,9 +20,10 @@ class Categories
      * @param   [type]  $_charset
      * @return  String  $sql
      */
-    public function migration($_charset)
+    public static function migration($_charset, $_prefix)
     {
-        $sql = "CREATE TABLE $this->table_name (
+        $table_name = $_prefix . "pekorkort_categories";
+        $sql = "CREATE TABLE $table_name (
             id       int(9)         NOT NULL AUTO_INCREMENT,
             name     varchar(30)    NOT NULL,            
             PRIMARY KEY  (id)
