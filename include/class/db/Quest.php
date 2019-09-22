@@ -160,4 +160,32 @@ class Quest
 
         return $query_result;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $_ids
+     * @return boolean|array
+     */
+    public function get_multiple_id(array $_ids)
+    {
+        if (!is_array($_ids))
+            return false;
+
+
+        $size = sizeof($_ids);
+        $where_string = '';
+        for ($i = $size - 1; $i >= 0; $i--) {
+            if ($i !== 0)
+                $where_string .= "id=" . $_ids[$i] . " OR ";
+            else
+                $where_string .= "id=" . $_ids[$i];
+        }
+
+        $query_string = "SELECT * FROM " . $this->table_name . " WHERE " . $where_string;
+        error_log($query_string);
+        $query_result = $this->wpdb->get_results($query_string);
+
+        return $query_result;
+    }
 }
