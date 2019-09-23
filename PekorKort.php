@@ -17,10 +17,11 @@ define('PEKORKORT_IMG_URL', trailingslashit(PEKORKORT_URL . 'assets/img'));
 define('PEKORKORT_INC_DIR', trailingslashit(PEKORKORT_DIR . 'include'));
 define('PEKORKORT_ADMIN_DIR', trailingslashit(PEKORKORT_DIR . 'admin'));
 define('PEKORKORT_TPL_DIR', trailingslashit(PEKORKORT_DIR . 'template'));
-define('PEKORKORT_VERSION', "0.1.0");
+define('PEKORKORT_VERSION', "0.3.0");
 
 include PEKORKORT_INC_DIR . 'class/db/db.php';
 include PEKORKORT_INC_DIR . 'class/Generator/Generator.php';
+require PEKORKORT_INC_DIR . 'class/Api/Api.php';
 require PEKORKORT_INC_DIR . 'assets.php';
 require PEKORKORT_INC_DIR . 'shortcodes.php';
 // require PEKORKORT_DIR . 'sample/dbSample.php';
