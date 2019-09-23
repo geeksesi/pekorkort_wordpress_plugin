@@ -28,6 +28,7 @@ class User
             user_id       int(9)         NOT NULL,
             wrongs        text           NULL,            
             emptys        text           NULL,            
+            seens        text           NULL,            
             PRIMARY KEY  (id)
           ) $_charset;";
 
@@ -108,6 +109,24 @@ class User
             return false;
 
         $sql_result = $this->wpdb->update($this->table_name, ["emptys" => $_new_emptys], ["id" => $_id], "%s", "%d");
+
+        return $sql_result;
+    }
+
+
+    /**
+     * update seens
+     *
+     * @param integer $_id
+     * @param string $_new_seens
+     * @return boolean
+     */
+    public function update_seens(int $_id, string $_new_seens)
+    {
+        if (!is_numeric($_id) ||  !is_string($_new_seens))
+            return false;
+
+        $sql_result = $this->wpdb->update($this->table_name, ["emptys" => $_new_seens], ["id" => $_id], "%s", "%d");
 
         return $sql_result;
     }

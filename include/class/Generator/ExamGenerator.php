@@ -60,9 +60,11 @@ class ExamGenerator
 
         $wrongs_id = $this->str_seprator($user_data["wrongs"]);
         $emptys_id = $this->str_seprator($user_data["emptys"]);
+        $seens_id  = $this->str_seprator($user_data["seens"]);
 
         $user_data["wrongs"] = $wrongs_id;
         $user_data["emptys"] = $emptys_id;
+        $user_data["seens"]  = $seens_id;
 
         return $user_data;
     }
@@ -120,6 +122,36 @@ class ExamGenerator
         return $data;
     }
 
+
+    /**
+     * get idsof not duplicates
+     *
+     * @param array $_seens
+     * @param array $_all
+     * @return boolean|array
+     */
+    private function get_just_new(array $_seens, array $_all)
+    {
+        if (!is_array($_seens) || !is_array($_all))
+            return false;
+
+        $sees_id = [];
+        foreach ($_seens as $key => $value) {
+            $sees_id[$key]["id"] = $value["id"];
+        }
+
+        // var_dump($sees_id);
+        // var_dump(array_diff(array_map('serialize', $_all), array_map('serialize', $sees_id)));
+        $result = array_merge(
+            array_diff(array_map('serialize', $_all), array_map('serialize', $sees_id)),
+            array_diff(array_map('serialize', $sees_id), array_map('serialize', $_all))
+        );
+
+        return array_map('unserialize', $result);
+    }
+
+
+
     /**
      * Undocumented function
      *
@@ -151,6 +183,9 @@ class ExamGenerator
         $more_quest = $this->get_more_quest($_option["category"]);
         if ($more_quest !== null && $more_quest !== false)
             $quests = array_merge($quests, $more_quest);
+
+        if ($_option["new_only"])
+            $quests = $this->get_just_new($user["seens"], $quests);
 
         $full = $this->make_useable($quests, $_option["length"], $_option["random"]);
 
