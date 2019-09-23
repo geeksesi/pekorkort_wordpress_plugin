@@ -3,7 +3,7 @@
 Plugin name: PekorKort-wp
 Plugin URI: http://localhost
 Description: Pekokort Drive Test plugin
-Version: V0.2.0
+Version: V0.3.0
 Author: RavandSoft
 Author URI: http://localhost
 Text Domain: -e('PekorKort-wp','PekorKort-wp')
