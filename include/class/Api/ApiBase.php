@@ -85,11 +85,18 @@ class ApiBase
         if (!isset($array["user_id"]))
             return false;
 
+        if (!isset($array["time"]))
+            return false;
+
+        if ((int) $array["time"] < time() - 50)
+            return false;
+
         if (!$this->user_validate($array["user_id"]))
             return false;
         // return $this->user_validate(2);
         return (int) $array["user_id"];
     }
+
 
     /**
      * check user exist in wordpress or not 
