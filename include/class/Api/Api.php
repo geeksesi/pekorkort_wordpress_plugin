@@ -1,7 +1,9 @@
 <?php
 defined('ABSPATH') || exit;
-require __DIR__ . '/ExamApi.php';
-require __DIR__ . '/UserApi.php';
+include __DIR__ . '/ApiBase.php';
+include __DIR__ . '/UserRestApi.php';
+require __DIR__ . '/ExamRestApi.php';
+// require __DIR__ . '/UserApi.php';
 
 
 add_action('rest_api_init', 'make_route');
@@ -9,8 +11,8 @@ add_action('rest_api_init', 'make_route');
 
 function make_route()
 {
-    $exam_api = new ExamApi();
-    $user_api = new UserApi();
+    $exam_api = new ExamRestApi();
+    $user_api = new UserRestApi();
     register_rest_route('pekorkort-exam-api/v1', 'user_access', array(
 
         'methods'  => 'POST',
