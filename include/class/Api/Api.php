@@ -3,7 +3,6 @@ defined('ABSPATH') || exit;
 include __DIR__ . '/ApiBase.php';
 include __DIR__ . '/UserRestApi.php';
 require __DIR__ . '/ExamRestApi.php';
-// require __DIR__ . '/UserApi.php';
 
 
 add_action('rest_api_init', 'make_route');
