@@ -18,9 +18,9 @@ class Exam
     /**
      * retun sql query for migration
      *
-     * @param   String  $_prefix
-     * @param   String  $_charset
-     * @return  String  $sql
+     * @param   string  $_prefix
+     * @param   string  $_charset
+     * @return  string  $sql
      */
     public static function migration($_charset, $_prefix)
     {
@@ -28,10 +28,10 @@ class Exam
         $sql = "CREATE TABLE $table_name (
             id               int(9)         NOT NULL AUTO_INCREMENT,
             user_id          int(9)         NOT NULL,
-            questions_id     varchar(100)   NOT NULL,
-            corrects_id      varchar(100)   NULL,
-            wrongs_id        varchar(100)   NULL,
-            emptys_id        varchar(100)   NULL,
+            questions_id     text           NOT NULL,
+            corrects_id      text           NULL,
+            wrongs_id        text           NULL,
+            emptys_id        text           NULL,
             status           varchar(10)    NOT NULL,
             options          text           NOT NULL,
             start_time       bigint(12)     NOT NULL,
@@ -50,17 +50,17 @@ class Exam
      * @param string $_questions_id
      * @param string $_status
      * @param string $_options
-     * @return boolean|array
+     * @return boolean|int
      */
-    public function set_data(int $_user_id, string $_questions_id, string $_status, string $_options)
+    public function set_data(int $_user_id, string $_questions_id, string $_options)
     {
-        if (empty($_user_id) || empty($_questions_id) || empty($_status) || empty($_options))
+        // return $_user_id;
+        if (empty($_user_id) || empty($_questions_id) || empty($_options))
             return false;
 
         $query_result = $this->wpdb->insert($this->table_name, [
             "user_id" => $_user_id,
             "questions_id" => $_questions_id,
-            "status" => $_status,
             "options" => $_options,
             "start_time" => time(),
         ], [
@@ -71,7 +71,10 @@ class Exam
             "start_time" => "%d",
         ]);
 
-        return $query_result;
+        if (!$query_result)
+            return false;
+
+        return $this->wpdb->insert_id;
     }
 
     /**
@@ -81,26 +84,27 @@ class Exam
      * @param string $_corrects_id
      * @param string $_wrongs_id
      * @param string $_emptys_id
-     * @return boolean|array
+     * @return boolean
      */
-    public function set_after_finish(int $_exam_id, string $_corrects_id = "", string $_wrongs_id = "", string $_emptys_id = "")
+    public function set_after_finish(int $_exam_id, string $_corrects_id = "{}", string $_wrongs_id = "{}", string $_emptys_id = "{}",  string $_status)
     {
         if (!is_numeric($_exam_id))
             return false;
 
         $sql_result = $this->wpdb->update($this->table_name, [
             "corrects_id" => $_corrects_id,
-            "wrongs_id" => $_wrongs_id,
-            "emptys_id" => $_emptys_id,
+            "wrongs_id"   => $_wrongs_id,
+            "emptys_id"   => $_emptys_id,
+            "status"      => $_status,
             "finish_time" => time(),
-        ], ["id" => $_exam_id], [
+        ], ["id"          => $_exam_id], [
             "corrects_id" => "%s",
-            "wrongs_id" => "%s",
-            "emptys_id" => "%s",
+            "wrongs_id"   => "%s",
+            "emptys_id"   => "%s",
             "finish_time" => "%d",
         ], "%d");
 
-        return sql_result;
+        return $sql_result;
     }
 
     /**

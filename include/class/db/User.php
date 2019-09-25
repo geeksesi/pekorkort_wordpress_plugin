@@ -28,7 +28,7 @@ class User
             user_id       int(9)         NOT NULL,
             wrongs        text           NULL,            
             emptys        text           NULL,            
-            seens        text           NULL,            
+            seens         text           NULL,            
             PRIMARY KEY  (id)
           ) $_charset;";
 

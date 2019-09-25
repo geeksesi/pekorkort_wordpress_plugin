@@ -27,7 +27,7 @@ class Quest
             quest             text            NOT NULL,
             answers           text            NOT NULL,
             quest_type        varchar(20)     NOT NULL,
-            answers_type      varchar(100)    NOT NULL,
+            answers_type      text            NOT NULL,
             category_id       int(10)         NOT NULL,
             level             int(2)          NOT NULL,
             wrong_refer       varchar(55)     NOT NULL,
@@ -60,24 +60,24 @@ class Quest
             return false;
 
         $query_result = $this->wpdb->insert($this->table_name, [
-            "quest" => $_question,
-            "answers" => $_answers,
-            "quest_type" => $_quest_type,
-            "answers_type" => $_answers_type,
-            "wrong_refer" => $_wrong_refer,
+            "quest"         => $_question,
+            "answers"       => $_answers,
+            "quest_type"    => $_quest_type,
+            "answers_type"  => $_answers_type,
+            "wrong_refer"   => $_wrong_refer,
             "correct_refer" => $_correct_refer,
-            "category_id" => $_category_id,
-            "level" => $_level,
-            "timestamp" => time()
+            "category_id"   => $_category_id,
+            "level"         => $_level,
+            "timestamp"     => time()
         ], [
-            "question" => "%s",
-            "answers" => "%s",
-            "quest_type" => "%s",
-            "answers_type" => "%s",
-            "wrong_refer" => "%s",
+            "question"      => "%s",
+            "answers"       => "%s",
+            "quest_type"    => "%s",
+            "answers_type"  => "%s",
+            "wrong_refer"   => "%s",
             "correct_refer" => "%s",
-            "category_id" => "%d",
-            "level" => "%d",
+            "category_id"   => "%d",
+            "level"         => "%d",
         ]);
 
         return $query_result;
