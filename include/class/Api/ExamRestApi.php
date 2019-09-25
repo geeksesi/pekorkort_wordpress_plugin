@@ -12,6 +12,8 @@ class ExamRestApi extends ApiBase
     public function __construct()
     {
         $this->user_api = new UserRestApi();
+        global $exam_generator;
+        $this->exam_generator = $exam_generator;
     }
 
 
@@ -59,7 +61,7 @@ class ExamRestApi extends ApiBase
      * @param integer $_user_id
      * @return boolean
      */
-    public function check_access_to_option(array $_option, int $_user_id)
+    private function check_access_to_option(array $_option, int $_user_id)
     {
         $user_access_code = $this->check_user_access((int) $_user_id);
         if (!$user_access_code) {
@@ -97,8 +99,14 @@ class ExamRestApi extends ApiBase
             return json_encode($output);
         }
 
+        $exam_generated = $this->exam_generator($user_id, $inputs);
+        if(! $exam_generated)
+            return false;
+
         $output["ok"]      = true;
         $output["message"] = "ok";
+        $output["exam"]    = $exam_generated;
+        
         return json_encode($output);
     }
 
@@ -113,7 +121,7 @@ class ExamRestApi extends ApiBase
      *
      * @return boolean|array
      */
-    public function check_finish_inputs()
+    private function check_finish_inputs()
     {
         $output = [];
         if (!isset($_POST["token"]) || !isset($_POST["exam_id"]) || !isset($_POST["corrects"]) || !isset($_POST["wrongs"]) || !isset($_POST["emptys"]))
@@ -141,7 +149,7 @@ class ExamRestApi extends ApiBase
      * @param integer $_exam_id
      * @return boolean
      */
-    public function check_exam_and_user(int $_user_id, int $_exam_id)
+    private function check_exam_and_user(int $_user_id, int $_exam_id)
     {
         return true;
     }
