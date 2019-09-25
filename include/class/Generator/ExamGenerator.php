@@ -95,14 +95,14 @@ class ExamGenerator
     }
 
     /**
-     * convert ids to data for use
+     * set limit or random on question ids
      *
      * @param array $_id_list
      * @param integer $_length
      * @param boolean $_random
      * @return boolean|array
      */
-    private function make_useable(array $_id_list, int $_length, bool $_random)
+    public function clean_ids(array $_id_list, int $_length, bool $_random)
     {
         if (!is_array($_id_list) || !is_int($_length) || !is_bool($_random))
             return false;
@@ -117,17 +117,36 @@ class ExamGenerator
                     break;
             }
         }
-        $data = $this->quest_db->get_multiple_id($ids);
 
-        return $data;
+        return $ids;
     }
 
 
     /**
-     * get idsof not duplicates
+     * store exam generated on db
      *
-     * @param array $_seens
-     * @param array $_all
+     * @param  integer $_user_id
+     * @param  array   $_option
+     * @param  array   $_quests_id
+     * @return boolean
+     */
+    public function store_exam(int $_user_id, array $_option, array $_quests_id)
+    {
+        global $exam_db;
+        $option = json_encode($_option);
+        $questions_id = json_encode($_quests_id);
+
+        $store_result = $exam_db->set_data($_user_id,  $questions_id, $option);
+        return $store_result;
+    }
+
+
+
+    /**
+     * get ids of not duplicates
+     *
+     * @param  array $_seens
+     * @param  array $_all
      * @return boolean|array
      */
     private function get_just_new(array $_seens, array $_all)
@@ -140,8 +159,6 @@ class ExamGenerator
             $sees_id[$key]["id"] = $value["id"];
         }
 
-        // var_dump($sees_id);
-        // var_dump(array_diff(array_map('serialize', $_all), array_map('serialize', $sees_id)));
         $result = array_merge(
             array_diff(array_map('serialize', $_all), array_map('serialize', $sees_id)),
             array_diff(array_map('serialize', $sees_id), array_map('serialize', $_all))
@@ -157,14 +174,14 @@ class ExamGenerator
      *
      * @param integer $_user_id
      * @param array $_option
-     * @return int 
+     * @return boolean|array 
      */
     public function new_exam(int $_user_id, array $_option)
     {
         if (!$this->check_option($_option))
             return false;
 
-        $user = $this->get_user_data($_user_id);
+        $user   = $this->get_user_data($_user_id);
 
         $quests = [];
 
@@ -187,9 +204,17 @@ class ExamGenerator
         if ($_option["new_only"])
             $quests = $this->get_just_new($user["seens"], $quests);
 
-        $full = $this->make_useable($quests, $_option["length"], $_option["random"]);
+        $final_ids = $this->clean_ids($quests, $_option["length"], $_option["random"]);
+        if (!$final_ids)
+            return false;
 
-        return $full;
+        $exam_id = $this->store_exam($_user_id, $_option, $final_ids);
+        $full = $this->quest_db->get_multiple_id($final_ids);
+
+        return [
+            "exam_id" => $exam_id,
+            "quests"  => $full
+        ];
     }
 
 
