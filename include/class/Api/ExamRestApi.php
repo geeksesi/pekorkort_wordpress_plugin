@@ -13,6 +13,8 @@ class ExamRestApi extends ApiBase
     {
         $this->user_api = new UserRestApi();
         global $exam_generator;
+        global $exam_db;
+        $this->exam_db = $exam_db;
         $this->exam_generator = $exam_generator;
     }
 
@@ -100,13 +102,13 @@ class ExamRestApi extends ApiBase
         }
 
         $exam_generated = $this->exam_generator($user_id, $inputs);
-        if(! $exam_generated)
+        if (!$exam_generated)
             return false;
 
         $output["ok"]      = true;
         $output["message"] = "ok";
         $output["exam"]    = $exam_generated;
-        
+
         return json_encode($output);
     }
 
@@ -132,7 +134,7 @@ class ExamRestApi extends ApiBase
 
         $output = [
             (string) "token"    => $_POST["token"],
-            (int)    "exma_id"  => $_POST["exma_id"],
+            (int)    "exam_id"  => $_POST["exma_id"],
             (array)  "corrects" => json_decode($_POST["corrects"]),
             (array)  "wrongs"   => json_decode($_POST["wrongs"]),
             (array)  "emptys"   => json_decode($_POST["emptys"]),
@@ -154,6 +156,31 @@ class ExamRestApi extends ApiBase
         return true;
     }
 
+
+    private function update_finished_exam(int $_exam_id, array $_corrects, array $_wrongs, array $_emptys)
+    {
+        if (!is_int($_exam_id) || !is_array($_corrects) || !is_array($_wrongs) || !is_array($_emptys))
+            return false;
+
+
+        $corrects_id = json_encode($_corrects);
+        $wrongs_id   = json_encode($_wrongs);
+        $emptys_id   = json_encode($_emptys);
+        $status      = "";
+
+        if (!empty($_corrects))
+            $status .= "c";
+
+        if (!empty($_wrongs))
+            $status .= "w";
+
+        if (!empty($_emptys))
+            $status .= "e";
+
+        $update_result = $this->exam_db->set_after_finish($_exam_id, $corrects_id, $wrongs_id, $emptys_id,  $status);
+
+        return $update_result;
+    }
 
     /**
      * method to handle POST request by this url : `http://localhost/wordpress/wp-json/pekorkort-exam-api/v1/finish_exam`
@@ -182,5 +209,16 @@ class ExamRestApi extends ApiBase
             $output["message"] = "access denied";
             return json_encode($output);
         }
+
+        $update_exam = $this->update_finished_exam($inputs["exam_id"], $inputs["corrects"], $inputs["wrongs"], $inputs["emptys"]);
+        if (!$update_exam) {
+            $output["ok"]      = false;
+            $output["message"] = "cannot update exam";
+            return json_encode($output);
+        }
+
+        $output["ok"]      = true;
+        $output["message"] = "success update exam";
+        return json_encode($output);
     }
 }
