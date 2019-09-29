@@ -177,13 +177,12 @@ class Quest
         $where_string = '';
         for ($i = $size - 1; $i >= 0; $i--) {
             if ($i !== 0)
-                $where_string .= "id=" . $_ids[$i] . " OR ";
+                $where_string .= "id=" . $_ids[$i]->id . " OR ";
             else
-                $where_string .= "id=" . $_ids[$i];
+                $where_string .= "id=" . $_ids[$i]->id;
         }
 
         $query_string = "SELECT * FROM " . $this->table_name . " WHERE " . $where_string;
-        error_log($query_string);
         $query_result = $this->wpdb->get_results($query_string);
 
         return $query_result;
