@@ -36,7 +36,7 @@ class ExamGenerator
         if (!is_bool($_option["new_only"]) || !is_bool($_option["emptys"])  || !is_bool($_option["wrongs"]) || !is_bool($_option["answer_result"]) || !is_bool($_option["random"]))
             return false;
 
-        if (!is_int($_option["length"]) || !is_string($_option["category"]))
+        if (!is_int($_option["length"]) || !is_array($_option["category"]))
             return false;
 
         return true;
@@ -62,9 +62,9 @@ class ExamGenerator
         $emptys_id = $this->str_seprator($user_data["emptys"]);
         $seens_id  = $this->str_seprator($user_data["seens"]);
 
-        $user_data["wrongs"] = $wrongs_id;
-        $user_data["emptys"] = $emptys_id;
-        $user_data["seens"]  = $seens_id;
+        $user_data["wrongs"] = ($wrongs_id === null) ? [] : $wrongs_id;
+        $user_data["emptys"] = ($emptys_id === null) ? [] : $emptys_id;
+        $user_data["seens"]  = ($seens_id  === null) ? [] : $seens_id;
 
         return $user_data;
     }
@@ -73,19 +73,19 @@ class ExamGenerator
     /**
      * 
      *
-     * @param string $_categories
+     * @param array $_categories
      * @return boolean|array
      */
-    private function get_more_quest(string $_categories = '')
+    private function get_more_quest(array $_categories = [])
     {
-        if (!is_string($_categories))
+        if (!is_array($_categories))
             return false;
 
-        if ($_categories === '') {
+        if (empty($_categories)) {
             return $this->quest_db->get_just_ids();
         }
 
-        $cats = $this->str_seprator($_categories);
+        $cats = $_categories;
         $ids = [];
         foreach ($cats as $key => $cat) {
             $tmp_ids = $this->quest_db->get_by_category($cat);
@@ -105,8 +105,8 @@ class ExamGenerator
     public function clean_ids(array $_id_list, int $_length, bool $_random)
     {
         if (!is_array($_id_list) || !is_int($_length) || !is_bool($_random))
-            return false;
-
+        return false;
+        
         $ids = [];
         if ($_random) {
             $ids = array_rand($_id_list, $_length);
@@ -114,11 +114,11 @@ class ExamGenerator
             foreach ($_id_list as $key => $value) {
                 array_push($ids, $value->id);
                 if (sizeof($ids) >= $_length)
-                    break;
+                break;
             }
         }
+        return $_id_list;
 
-        return $ids;
     }
 
 
@@ -199,14 +199,15 @@ class ExamGenerator
 
         $more_quest = $this->get_more_quest($_option["category"]);
         if ($more_quest !== null && $more_quest !== false)
-            $quests = array_merge($quests, $more_quest);
-
+        $quests = array_merge($quests, $more_quest);
+        
         if ($_option["new_only"])
-            $quests = $this->get_just_new($user["seens"], $quests);
-
+        $quests = $this->get_just_new($user["seens"], $quests);
+        
         $final_ids = $this->clean_ids($quests, $_option["length"], $_option["random"]);
+        // return $final_ids;
         if (!$final_ids)
-            return false;
+        return false;
 
         $exam_id = $this->store_exam($_user_id, $_option, $final_ids);
         $full = $this->quest_db->get_multiple_id($final_ids);
