@@ -39,18 +39,18 @@ class ExamRestApi extends ApiBase
         if (!isset($_POST['token']) || !isset($_POST['new_only']) || !isset($_POST['emptys']) || !isset($_POST['wrongs']) || !isset($_POST['answer_result']) || !isset($_POST['random']) || !isset($_POST['length']) || !isset($_POST['category']))
             return false;
 
-        if (!empty($_POST['token']) || !empty($_POST['new_only']) || !empty($_POST['emptys']) || !empty($_POST['wrongs']) || !empty($_POST['answer_result']) || !empty($_POST['random']) || !empty($_POST['length']) || !empty($_POST['category']))
+        if (empty($_POST['token']) || empty($_POST['new_only']) || empty($_POST['emptys']) || empty($_POST['wrongs']) || empty($_POST['answer_result']) || empty($_POST['random']) || empty($_POST['length']))
             return false;
 
         $output = [
-            (string) "token"         => $_POST["token"],
-            (bool)   "new_only"      => $_POST["new_only"],
-            (bool)   "emptys"        => $_POST["emptys"],
-            (bool)   "wrongs"        => $_POST["wrongs"],
-            (bool)   "answer_result" => $_POST["answer_result"],
-            (bool)   "random"        => $_POST["random"],
-            (int)    "length"        => $_POST["length"],
-            (array)  "category"      => json_decode($_POST["category"]),
+            "token"         => (string) $_POST["token"],
+            "new_only"      => (bool)   $_POST["new_only"],
+            "emptys"        => (bool)   $_POST["emptys"],
+            "wrongs"        => (bool)   $_POST["wrongs"],
+            "answer_result" => (bool)   $_POST["answer_result"],
+            "random"        => (bool)   $_POST["random"],
+            "length"        => (int)    $_POST["length"],
+            "category"      => (array)  json_decode($_POST["category"]),
         ];
         return $output;
     }
@@ -82,6 +82,7 @@ class ExamRestApi extends ApiBase
     public function make_exam()
     {
         $inputs = $this->check_make_input();
+        // return json_encode($inputs);
         if (!is_array($inputs) || !$inputs) {
             $output["ok"]      = false;
             $output["message"] = "inputs faild";
@@ -101,14 +102,15 @@ class ExamRestApi extends ApiBase
             return json_encode($output);
         }
 
-        $exam_generated = $this->exam_generator($user_id, $inputs);
+        $exam_generated = $this->exam_generator->new_exam($user_id, $inputs);
+        return $exam_generated;
         if (!$exam_generated)
-            return false;
 
         $output["ok"]      = true;
         $output["message"] = "ok";
         $output["exam"]    = $exam_generated;
 
+        // return "HH";
         return json_encode($output);
     }
 
@@ -129,7 +131,7 @@ class ExamRestApi extends ApiBase
         if (!isset($_POST["token"]) || !isset($_POST["exam_id"]) || !isset($_POST["corrects"]) || !isset($_POST["wrongs"]) || !isset($_POST["emptys"]))
             return false;
 
-        if (!empty($_POST["token"]) || !empty($_POST["exam_id"]) || !empty($_POST["corrects"]) || !empty($_POST["wrongs"]) || !empty($_POST["emptys"]))
+        if (empty($_POST["token"]) || empty($_POST["exam_id"]) || empty($_POST["corrects"]) || empty($_POST["wrongs"]) || empty($_POST["emptys"]))
             return false;
 
         $output = [

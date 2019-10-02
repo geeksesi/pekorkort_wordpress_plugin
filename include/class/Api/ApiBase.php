@@ -88,8 +88,8 @@ class ApiBase
         if (!isset($array["time"]))
             return false;
 
-        if ((int) $array["time"] < time() - 50)
-            return false;
+        // if ((int) $array["time"] < time() - 50)
+        //     return false;
 
         if (!$this->user_validate($array["user_id"]))
             return false;

@@ -11,7 +11,7 @@ class UserRestApi extends ApiBase
 
     public function user_access_handle()
     {
-        // return $this->make_token(1);
+        return $this->make_token(1);
         $output = [];
         if (!isset($_POST["token"]) || !is_string($_POST["token"])) {
             $output["ok"]      = false;
